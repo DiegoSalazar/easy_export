@@ -34,6 +34,7 @@ module EasyExport
     def export_fields;  @export_config.fields end
   end
 
+  # These are the DSL methods available within the `exportable` block
   class ExportConfig
     attr_accessor :partial
 
@@ -80,8 +81,10 @@ module EasyExport
     def initialize(options = {})
       @options = options
       @model   = options[:model].constantize
-      @scope   = @model.export_scope
-      @fields  = @model.export_fields
+      # the @model.export_scope is configured via the `exportable` block
+      @scope   = options.fetch :scope, @model.export_scope
+      # the fields configured via the `exportable` block
+      @fields  = options.fetch :fields, @model.export_fields
       @header  = @fields.keys
     end
 
